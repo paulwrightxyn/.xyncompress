@@ -54,7 +54,7 @@ fi
 
 
 # run the script to compress the files
-echo "Running script to compress files before adding to crontab: "
+echo "Running script to compress files before adding to crontab.  This may take a while. "
 echo "${PWD}/${compressscript}  ${thedir} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile}"
 ${PWD}/${compressscript}  ${thedir} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile}
 
