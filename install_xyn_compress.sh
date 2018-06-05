@@ -9,17 +9,25 @@ compressscript=xyncompress.sh
 logfile=imageCompression.log
 
 # function for writing errors
-echoerr() { printf "%s\n" "$*" >&2; }
+echoerr() { printf "%s\\n" "$*" >&2; }
 
 # get parent directory: the path to the folder in which to run compression 
 parent_dir="$(dirname -- "$(readlink -f -- "$PWD")")"
 
 # check if the filesystem is set up like Expression Engine, with images in /uploads/images,
 # or like Magento, with images in /media, or like Wordpress, with images in /wp-content/uploads
-#
-# default expects expression engine file system:
 
-if [ -d "${parent_dir}/uploads/images/" ]; then
+
+if [ $# -eq 1 ]; then
+	echo "Installing in directory: $1"
+	thedir="$1"
+elif [ $# -gt 1 ]; then
+	echoerr ""
+	echoerr "***  ERROR ***"
+	echoerr "*** Expected 1 argument, but found $#"
+	echoerr ""
+	exit 1
+elif [ -d "${parent_dir}/uploads/images/" ]; then
 	echo "Expression Engine file system structure detected"
 	thedir="${parent_dir}/uploads/images/"
 elif [ -d "${parent_dir}/media/" ]; then
