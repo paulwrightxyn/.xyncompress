@@ -37,3 +37,10 @@ To run the compression on a different folder:
 ```
 bash xyncompress.sh /path/to/image/directory
 ```
+
+To run the compression and create backups of the files (file compression is lossy and 
+will overwrite the full sized image files).
+```
+bash xyncompress.sh /path/to/image/directory --backups
+```
+
