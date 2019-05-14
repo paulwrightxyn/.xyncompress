@@ -51,8 +51,8 @@ for f in $(find ${1} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.jpeg' -
     optFullPath="${dir}.opt/${optFileName}"; 
     
     # Get backup file path
-    backupFilePath_JPG="${dir}.opt/backup/"$(sed 's/\.[^.]*$/.bak.jpg/' <<< "${f}");
-    backupFilePath_PNG="${dir}.opt/backup/"$(sed 's/\.[^.]*$/.bak.png/' <<< "${f}");
+    backupFilePath_JPG="${dir}.opt/backup/"$(sed 's/\.[^.]*$/.bak.jpg/' <<< $(basename "${f}"));
+    backupFilePath_PNG="${dir}.opt/backup/"$(sed 's/\.[^.]*$/.bak.png/' <<< $(basename "${f}"));
      
     # Set last opt time 
     lastOptTime=0; 
@@ -70,7 +70,7 @@ for f in $(find ${1} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.jpeg' -
 	        echo "Optimizing JPG: ${f}";  
 	        
 	        if [ $doBackups = 1 ]; then
-  	        echo "Making backup of ${backupFilePath_JPG}";
+  	        echo "Making backup: ${backupFilePath_JPG}";
   	        cp ${f} $backupFilePath_JPG;
 	        fi
 	        
@@ -89,7 +89,7 @@ for f in $(find ${1} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.jpeg' -
 	        echo "Optimizing PNG: ${f}"; 
 	        
 	        if [ $doBackups = 1 ]; then
-  	        echo "Making backup of ${backupFilePath_PNG}";
+  	        echo "Making backup: ${backupFilePath_PNG}";
   	        cp ${f} $backupFilePath_PNG;
           fi
 	         
