@@ -72,4 +72,12 @@ front-end code, we can add a few lines to the .htaccess file:
 
 AddType image/webp .webp
 ```
+## Troubleshooting
+
+If you are getting errors that files cannot be created or edited, make sure that the 
+permissions on the filesystem are such that the script may edit files.
+
+Also, check the error logs, which are in the .xyncompress folder. If you have any issues, 
+please contact paul.wright@xynergy.com or submit an issue on the git repo:
+[https://github.com/paulwrightxyn/.xyncompress.git](https://github.com/paulwrightxyn/.xyncompress.git)
 
