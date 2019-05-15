@@ -1,5 +1,43 @@
 #!/bin/env bash
 
+# Handle flags
+
+optionsStr="";
+while test $# -gt 0
+do
+    case "$1" in
+        --backups) echo "Backups enabled. ";
+          optionsStr="${optionsStr} --backups";
+            ;;
+        --webp) echo "WebP enabled. ";
+          optionsStr="${optionsStr} --webp";
+            ;;
+        --no-jpg) echo "JPG disabled";
+          optionsStr="${optionsStr} --no-jpg";
+            ;;
+        --no-png) echo "PNG disabled";
+          optionsStr="${optionsStr} --no-png";
+            ;;
+        --force) echo "Force even if optimized record exists";
+          optionsStr="${optionsStr} --force";
+            ;;
+        --*) echo "bad option $1";
+          echo "Available options:";
+          echo "--backups make backups in .opt/backup folder";
+          echo "--webp make WebP images";
+          echo "--no-jpg do not compress jpg files (default is to compress). Compression is lossy and will overwrite original files!";
+          echo "--no-png do not compress png files (default is to compress). Compression is lossy and will overwrite original files!";
+          echo "--force force compression of all files even if they have not been updated."
+          exit 1;
+            ;;
+        *) echo "Unknown argument. Exiting.";
+          exit 1;
+            ;;
+    esac
+    shift
+done
+
+
 # Define some names:
 
 # compression script
@@ -39,7 +77,7 @@ elif [ -d "${parent_dir}/wp-content/uploads/" ]; then
 else
 	echoerr ""
 	echoerr "***  ERROR ***"
-	echoerr "CMS file system not detected.  Make sure this script is being run from docs/.xyncompress/, or docs.dev/.xyncompress/"
+	echoerr "CMS file system not detected.  Make sure this script is being run from docs/.xyncompress/, docs.dev/.xyncompress/, or public/.xyncompress/"
 	echoerr ""
 	exit 1
 fi
@@ -63,12 +101,12 @@ fi
 
 # run the script to compress the files
 echo "Running script to compress files before adding to crontab.  This may take a while. "
-echo "${PWD}/${compressscript}  ${thedir} | tee -a ${PWD}/${logfile}"
+echo "${PWD}/${compressscript} ${thedir} ${optionsStr} | tee -a ${PWD}/${logfile}"
 ${PWD}/${compressscript}  ${thedir} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile}
 
 # echo new cron into cron file
 echo "Adding new cron job for ${compressscript} - run every 2 hours in ${thedir}"
-echo "0 */2 * * * ${PWD}/${compressscript}  ${thedir} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile} " >> ${tempfile}
+echo "0 */2 * * * ${PWD}/${compressscript} ${thedir} ${optionsStr} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile} " >> ${tempfile}
 
 
 # install new cron file
