@@ -68,7 +68,7 @@ bash xyncompress.sh /path/to/image/directory --backups
 ## Serving WebP images 
 The compression script will create WebP versions of all images by default. In order 
 to serve these images to browsers that support them without having to change 
-front-end code, we can add a few linesto the .htaccess file:
+front-end code, we can add a few lines to the .htaccess file:
 
 ```apache
 <IfModule mod_rewrite.c>
@@ -85,4 +85,14 @@ front-end code, we can add a few linesto the .htaccess file:
 
 AddType image/webp .webp
 ```
+
+## Troubleshooting
+
+If you are getting errors that files cannot be created or edited, make sure that the 
+permissions on the filesystem are such that the script may edit files.
+
+Also, check the error logs, which are in the .xyncompress folder. If you have any issues, 
+please contact paul.wright@xynergy.com or submit an issue on the git repo:
+[https://github.com/paulwrightxyn/.xyncompress.git](https://github.com/paulwrightxyn/.xyncompress.git)
+
 

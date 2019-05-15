@@ -108,7 +108,7 @@ for f in $(find ${filepath} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.
 	        
 	        # If backups flag was set, then make a backup
 	        if [ $doBackups = 1 ]; then
-  	        echo "  Making backup: ${backupFilePath_JPG}";
+  	        echo "Making backup: ${backupFilePath_JPG}";
   	        cp ${f} $backupFilePath_JPG;
 	        fi
 	        
@@ -140,7 +140,7 @@ for f in $(find ${filepath} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.
 	        echo "Optimizing file. Source image: PNG ${f}"; 
 	        
 	        if [ $doBackups = 1 ]; then
-  	        echo "  Making backup: ${backupFilePath_PNG}";
+  	        echo "Making backup: ${backupFilePath_PNG}";
   	        cp ${f} $backupFilePath_PNG;
           fi
 	         
