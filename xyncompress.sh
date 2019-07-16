@@ -21,11 +21,20 @@ if [[ -z "$1" ]]; then
     echo "Must provide path to optimize" 1>&2
     exit 1
 fi
+if [[ -z "$2" ]]; then
+    echo "Options required. Available options:";
+    echo "  --backups make backups in .opt/backup folder";
+    echo "  --webp make WebP images";
+    echo "  --jpg do not compress jpg files (default is to compress). Compression is lossy and will overwrite original files!";
+    echo "  --png do not compress png files (default is to compress). Compression is lossy and will overwrite original files!";
+    echo "  --force force compression of all files even if they have not been updated."
+    exit 1
+fi
 
 doBackups=0;
 doWebP=0;
-doJpg=1;
-doPng=1;
+doJpg=0;
+doPng=0;
 filepath=0;
 doForce=0;
 while test $# -gt 0
@@ -37,10 +46,10 @@ do
         --webp) echo "WebP enabled. ";
           doWebP=1;
             ;;
-        --no-jpg) echo "JPG disabled";
+        --jpg) echo "JPG enabled";
           doJpg=0;
             ;;
-        --no-png) echo "PNG disabled";
+        --png) echo "PNG enabled";
           doPng=0;
             ;;
         --force) echo "Force even if optimized record exists";
@@ -48,11 +57,11 @@ do
             ;;
         --*) echo "bad option $1";
           echo "Available options:";
-          echo "--backups make backups in .opt/backup folder";
-          echo "--webp make WebP images";
-          echo "--no-jpg do not compress jpg files (default is to compress). Compression is lossy and will overwrite original files!";
-          echo "--no-png do not compress png files (default is to compress). Compression is lossy and will overwrite original files!";
-          echo "--force force compression of all files even if they have not been updated."
+          echo "  --backups make backups in .opt/backup folder";
+          echo "  --webp make WebP images";
+          echo "  --jpg do not compress jpg files (default is to compress). Compression is lossy and will overwrite original files!";
+          echo "  --png do not compress png files (default is to compress). Compression is lossy and will overwrite original files!";
+          echo "  --force force compression of all files even if they have not been updated."
           exit 1;
             ;;
         *) filepath="$1";
@@ -64,9 +73,10 @@ done
 
 
 # Iterate through files 
-for f in $(find ${filepath} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.jpeg' -or -iname '*.png' \) ); do 
+IFS=$'\n';
+find ${filepath} -not -path '*.opt*' \( -iname '*.jpg' -or -iname '*.jpeg' -or -iname '*.png' \) | while read f; do 
 	# Get the last mod date of the file 
-    fileMod=$(date -r ${f} +%s); 
+    fileMod=$(date -r "${f}" +%s); 
      
     # Get the directory 
     dir=$(dirname "${f}")"/";

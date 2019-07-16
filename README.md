@@ -75,8 +75,8 @@ front-end code, we can add a few lines to the .htaccess file:
   RewriteEngine On 
   RewriteCond %{HTTP_ACCEPT} image/webp
   RewriteCond %{REQUEST_URI}  (?i)(.*)(\.jpe?g|\.png)$ 
-  RewriteCond %{DOCUMENT_ROOT}$1.webp -f
-  RewriteRule (?i)(.*)(\.jpe?g|\.png)$ $1\.webp [L,T=image/webp,R] 
+  RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+  RewriteRule (?i)(.*)(\.jpe?g|\.png)$ $1\.webp [L,T=image/webp,R]
 </IfModule>
 
 <IfModule mod_headers.c>
