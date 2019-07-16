@@ -1,41 +1,15 @@
 #!/bin/env bash
 
 # Handle flags
-
-optionsStr="";
-while test $# -gt 0
-do
-    case "$1" in
-        --backups) echo "Backups enabled. ";
-          optionsStr="${optionsStr} --backups";
-            ;;
-        --webp) echo "WebP enabled. ";
-          optionsStr="${optionsStr} --webp";
-            ;;
-        --no-jpg) echo "JPG disabled";
-          optionsStr="${optionsStr} --no-jpg";
-            ;;
-        --no-png) echo "PNG disabled";
-          optionsStr="${optionsStr} --no-png";
-            ;;
-        --force) echo "Force even if optimized record exists";
-          optionsStr="${optionsStr} --force";
-            ;;
-        --*) echo "bad option $1";
-          echo "Available options:";
-          echo "--backups make backups in .opt/backup folder";
-          echo "--webp make WebP images";
-          echo "--no-jpg do not compress jpg files (default is to compress). Compression is lossy and will overwrite original files!";
-          echo "--no-png do not compress png files (default is to compress). Compression is lossy and will overwrite original files!";
-          echo "--force force compression of all files even if they have not been updated."
-          exit 1;
-            ;;
-        *) echo "Unknown argument. Exiting.";
-          exit 1;
-            ;;
-    esac
-    shift
-done
+#if [[ -z "$2" ]]; then
+#    echo "Options required. Available options:";
+#    echo "  --backups make backups in .opt/backup folder";
+#    echo "  --webp make WebP images";
+#    echo "  --jpg do not compress jpg files (default is to compress). Compression is lossy and will overwrite original files!";
+#    echo "  --png do not compress png files (default is to compress). Compression is lossy and will overwrite original files!";
+#    echo "  --force force compression of all files even if they have not been updated."
+#    exit 1
+#fi
 
 
 # Define some names:
@@ -56,15 +30,56 @@ parent_dir="$(dirname -- "$(readlink -f -- "$PWD")")"
 # or like Magento, with images in /media, or like Wordpress, with images in /wp-content/uploads
 
 
-if [ $# -eq 1 ]; then
+optionsStr="";
+filepath="";
+while test $# -gt 0
+do
+    case "$1" in
+        --backups) echo "Backups enabled. ";
+          optionsStr="${optionsStr} --backups";
+            ;;
+        --webp) echo "WebP enabled. ";
+          optionsStr="${optionsStr} --webp";
+            ;;
+        --jpg) echo "JPG enabled";
+          optionsStr="${optionsStr} --jpg";
+            ;;
+        --png) echo "PNG enabled";
+          optionsStr="${optionsStr} --png";
+            ;;
+        --force) echo "Force even if optimized record exists";
+          optionsStr="${optionsStr} --force";
+            ;;
+        --*) echo "bad option $1";
+          echo "Available options:";
+          echo "  --backups make backups in .opt/backup folder";
+          echo "  --webp make WebP images";
+          echo "  --jpg compress jpg files. Compression is lossy and will overwrite original files!";
+          echo "  --png compress png files. Compression is lossy and will overwrite original files!";
+          echo "  --force force compression of all files even if they have not been updated."
+          exit 1;
+            ;;
+        *) filepath="$1";
+          echo "Compressing all uncompressed images found in $filepath based on the settings provided.";
+            ;;
+    esac
+    shift
+done
+
+if [[ -z "${optionsStr// }" ]]; then
+  echo "options required. "
+  echo "Available options:";
+    echo "  --backups make backups in .opt/backup folder";
+    echo "  --webp make WebP images";
+    echo "  --jpg compress jpg files. Compression is lossy and will overwrite original files!";
+    echo "  --png compress png files. Compression is lossy and will overwrite original files!";
+    echo "  --force force compression of all files even if they have not been updated."
+    exit 1;
+fi
+
+if [[ ! -z "${filepath}" ]]; then
 	echo "Installing in directory: $1"
-	thedir="$1"
-elif [ $# -gt 1 ]; then
-	echoerr ""
-	echoerr "***  ERROR ***"
-	echoerr "*** Expected 1 argument, but found $#"
-	echoerr ""
-	exit 1
+	thedir="${filepath}"
 elif [ -d "${parent_dir}/uploads/images/" ]; then
 	echo "Expression Engine file system structure detected"
 	thedir="${parent_dir}/uploads/images/"
@@ -81,8 +96,6 @@ else
 	echoerr ""
 	exit 1
 fi
-
-
 
 # write out current crontab - random number used to avoid collisions
 tempfile=mycron$RANDOM;
@@ -102,7 +115,7 @@ fi
 # run the script to compress the files
 echo "Running script to compress files before adding to crontab.  This may take a while. "
 echo "${PWD}/${compressscript} ${thedir} ${optionsStr} | tee -a ${PWD}/${logfile}"
-${PWD}/${compressscript}  ${thedir} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile}
+${PWD}/${compressscript}  ${thedir} ${optionsStr} 2>> ${PWD}/${logfile}.err 1>> ${PWD}/${logfile}
 
 # echo new cron into cron file
 echo "Adding new cron job for ${compressscript} - run every 2 hours in ${thedir}"

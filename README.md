@@ -24,8 +24,14 @@ WordPress: 	`root-of-site/wp-content/uploads/`
 Alternately, takes a single directory as an argument, and sets the crontab to execute
 the script every 2 hours in that directory.  May be run multiple times to target 
 multiple locations.
+
+Flags are required to denote what kind of compression you wish to use. This script will run 
+recursively in /home/domains/example.com/public/imageDirectory/ and its subdirectories. It will 
+run WebP compression, creating a .webp duplicate file. It will then run jpg compression and png 
+compression, overwriting the original files with the compressed versions. It will then remove any 
+WebP images that are not smaller than their PNG or JPG counterparts.
 ```
-bash install_xyn_compress.sh /home/domains/example.com/docs/imageDirectory/
+bash install_xyn_compress.sh /home/domains/example.com/public/imageDirectory/ --jpg --png --webp
 ```
 	
 Note, it will not overwrite the existing crontab, but will append to it instead.
@@ -51,9 +57,9 @@ Options:
  
  --webp creates WebP images in the same directory, and then checks if the WebP image is larger than the same JPG (after compression, if any). If the WebP is larger, the --webp option will remove the webp image so that all webp files are smaller than the corresponding JPG.
  
- --no-jpg do not compress jpgs (which is a lossy, destructive action).
+ --jpg compress jpgs (which is a lossy, destructive action).
  
- --no-png do not compress pngs (which is a lossy, destructive action).
+ --png compress pngs (which is a lossy, destructive action).
 
  --force forces the script to create versions of every file found, even if the file has not been updated since the last time this script ran.
 
