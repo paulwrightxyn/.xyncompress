@@ -2,12 +2,17 @@
 The original master repo may be found at [https://github.com/paulwrightxyn/.xyncompress.git](https://github.com/paulwrightxyn/.xyncompress.git).
 
 
-Add the .xyncompress folder to the docs/ folder.  
-To install: 
+Add the .xyncompress folder to the docs or public folder.  
+To install for jpg and png compression: 
 ```
-bash install_xyn_compress.sh
+bash install_xyn_compress.sh --jpg --png
 ```
-	
+
+To create webp files as well as jpg and png files:
+```
+bash install_xyn_compress.sh --jpg --png --webp
+```
+
 Must be run from `docs/.xyncompress`
 
 
@@ -25,14 +30,15 @@ Alternately, takes a single directory as an argument, and sets the crontab to ex
 the script every 2 hours in that directory.  May be run multiple times to target 
 multiple locations.
 
-Flags are required to denote what kind of compression you wish to use. This script will run 
-recursively in /home/domains/example.com/public/imageDirectory/ and its subdirectories. It will 
-run WebP compression, creating a .webp duplicate file. It will then run jpg compression and png 
-compression, overwriting the original files with the compressed versions. It will then remove any 
-WebP images that are not smaller than their PNG or JPG counterparts.
+Flags are required to denote what kind of compression you wish to use. 
 ```
 bash install_xyn_compress.sh /home/domains/example.com/public/imageDirectory/ --jpg --png --webp
 ```
+This script will run recursively in /home/domains/example.com/public/imageDirectory/ and its 
+subdirectories. It will run WebP compression, creating a .webp duplicate file. It will then 
+run jpg compression and png compression, overwriting the original files with the compressed 
+versions. It will then remove any WebP images that are not smaller than their PNG or JPG 
+counterparts.
 	
 Note, it will not overwrite the existing crontab, but will append to it instead.
 
@@ -44,11 +50,11 @@ Creates an error log and a record of files compressed in .xynsystem (two log fil
 	log file: `.xyncompress/imageCompression.log`
 	error file: `.xyncompressimageCompression.log.err`
 
-## Running the script manually
+## Running the compression script manually
 
 To run the compression on a different folder: 
 ```
-bash xyncompress.sh /path/to/image/directory
+bash xyncompress.sh /path/to/image/directory --options
 ```
 
 Options: 
